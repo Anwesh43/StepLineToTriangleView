@@ -183,4 +183,26 @@ class TriCreateRotBouncyView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : TriCreateRotBouncyView) {
+
+        private val animator : Animator = Animator(view)
+        private val tcrb : TCRB = TCRB(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            tcrb.draw(canvas, paint)
+            animator.animate {
+                tcrb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            tcrb.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
