@@ -206,4 +206,13 @@ class TriCreateRotBouncyView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : TriCreateRotBouncyView {
+            val view : TriCreateRotBouncyView = TriCreateRotBouncyView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
