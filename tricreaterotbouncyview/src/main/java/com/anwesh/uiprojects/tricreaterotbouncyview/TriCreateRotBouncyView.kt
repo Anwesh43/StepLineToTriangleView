@@ -25,3 +25,31 @@ fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+fun Int.ip2() : Int = this % 2
+fun Int.sfip2() : Float = 1f - 2 * this.ip2()
+
+fun Canvas.drawRotatingLine(i : Int, scale : Float, w : Float, paint : Paint) {
+    val gap : Float = w / (lines * 2)
+    save()
+    translate(gap * (1 + i / 2 + i.ip2()), 0f)
+    rotate(deg * i.sfip2())
+    drawLine(0f, 0f, 0f, -gap, paint)
+    restore()
+}
+
+fun Canvas.drawTriangleAtSteps(scale : Float, w : Float, paint : Paint) {
+    for (j in 0..(lines - 1)) {
+        drawRotatingLine(j, scale, w, paint)
+    }
+}
+
+fun Canvas.drawTCRBNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    save()
+    translate(0f, gap * (i + 1))
+    drawTriangleAtSteps(scale, w, paint)
+    restore()
+}
+
