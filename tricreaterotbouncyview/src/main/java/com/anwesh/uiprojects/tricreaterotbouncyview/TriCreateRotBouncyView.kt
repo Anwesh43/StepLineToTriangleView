@@ -14,12 +14,12 @@ import android.content.Context
 
 val nodes : Int = 5
 val lines : Int = 6
-val scGap : Float = 0.02f
+val scGap : Float = 0.02f / lines
 val strokeFactor : Int = 90
-val deg : Float = 60f
+val deg : Float = 30f
 val foreColor : Int = Color.parseColor("#3F51B5")
 val backColor : Int = Color.parseColor("#BDBDBD")
-val delay : Long = 30
+val delay : Long = 10
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -29,10 +29,10 @@ fun Int.ip2() : Int = this % 2
 fun Int.sfip2() : Float = 1f - 2 * this.ip2()
 
 fun Canvas.drawRotatingLine(i : Int, scale : Float, w : Float, paint : Paint) {
-    val gap : Float = w / (lines * 2)
+    val gap : Float =  w / (lines)
     save()
     translate(gap * (1 + i / 2 + i.ip2()), 0f)
-    rotate(deg * i.sfip2())
+    rotate(deg * i.sfip2() * scale.sinify().divideScale(i, lines))
     drawLine(0f, 0f, 0f, -gap, paint)
     restore()
 }
@@ -47,6 +47,9 @@ fun Canvas.drawTCRBNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
     val gap : Float = h / (nodes + 1)
+    paint.color = foreColor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
     save()
     translate(0f, gap * (i + 1))
     drawTriangleAtSteps(scale, w, paint)
